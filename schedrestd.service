@@ -1,0 +1,12 @@
+[Unit]
+Description=HPC Scheduler REST service
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/schedrestd
+ExecReload=/usr/bin/kill -HUP $MAINPID
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

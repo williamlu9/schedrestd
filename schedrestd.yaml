@@ -1,0 +1,34 @@
+# The configuration for schedrestd
+#
+#------------------------------------------------------------------------
+# Log level. Valid values are fatal, error, warn, info, debug.
+# Default value is info
+# log_level: info
+
+#------------------------------------------------------------------------
+# Token timeout value. Integer. Unit is minute. Default value is 30 min
+# timeout: 30
+
+#------------------------------------------------------------------------
+# Define the web url prefix path for Restful API
+# web_url_path: /
+
+#------------------------------------------------------------------------
+# Enabling https. The default is 0 (disabled). Valid value is 1 or 0
+# ssl: 0
+
+#------------------------------------------------------------------------
+# Public web port for disabling https. The default is 8088
+# http_port: 8088
+
+#------------------------------------------------------------------------
+# Public web secure port for enabling https. The default is 8043
+# https_port: 8043
+
+#------------------------------------------------------------------------
+# Https certificate file path. If enable https, need to generate it
+# cert: /opt/cert/server.crt
+
+#------------------------------------------------------------------------
+# Https key file path. If enable https, need to generate it
+# key: /opt/cert/server.key
