@@ -198,6 +198,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/token/renew": {
+            "get": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "token"
+                ],
+                "summary": "Renew token",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd token here\u003e",
+                        "description": "Token with Bearer started",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/auth.TokenResp"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid token",
+                        "schema": {
+                            "$ref": "#/definitions/response.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/login": {
             "post": {
                 "description": "Logs user into the system",
@@ -298,6 +336,15 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "output": {
+                    "type": "string"
+                }
+            }
+        },
+         "response.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "msg": {
                     "type": "string"
                 }
             }

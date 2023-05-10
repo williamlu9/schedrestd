@@ -68,7 +68,7 @@ func getLogLevel(level string) logrus.Level {
 
 // SetDefault sets the default logger for testing and outside fx container
 func SetDefault() (AipLogger, error) {
-	log := NewLogger(&config.Config{LogDir: config.GetLogDir()})
+	log := NewLogger(config.NewConfig())
 	if log == nil {
 		return nil, fmt.Errorf("failed to set default logger")
 	}

@@ -101,13 +101,13 @@ func (h *Handler) LoginUser(c *gin.Context) {
 	cAuth := C.authenticate(username, C.CString(req.Password))
 	defer C.free(unsafe.Pointer(username))
 	if int(cAuth) == 0 {
-		logger.GetDefault().Errorf("Authentication failed")
+		logger.GetDefault().Errorf("Authentication failed for user: " + req.UserName)
 		response.ResErr(c, http.StatusBadRequest, errors.New(AUTHERROR))
 		return
 	}
 
 	// generate token
-	claims := jwt.AIPClaims{
+	claims := jwt.AClaims{
 		req.UserName,
 		stdJwt.StandardClaims{
 			Issuer: "Schedrestd",
@@ -142,4 +142,44 @@ func (h *Handler) LoginUser(c *gin.Context) {
 	response.ResOKGinJson(c, &TokenResp{
 		resp,
 	})			
+}
+
+func (h *Handler) TokenRenew(c *gin.Context) {
+    val,_ := c.Get(common.UserHeader)
+    username := val.(string)
+    claims := jwt.AClaims{
+            username,
+            stdJwt.StandardClaims{
+                        Issuer: "Schedrestd",
+                        IssuedAt: time.Now().Unix(),
+                },
+        }
+        token, err := h.jwt.GenerateToken(claims)
+        if err != nil {
+                response.ResErr(c, http.StatusInternalServerError, err)
+                return
+        }
+
+        // store token in db
+        key := fmt.Sprintf("%v-%v", token, username)
+        timeOut, err := strconv.ParseInt(h.conf.Timeout, 10, 64)
+        if err != nil {
+                timeOut = 30 // Default value is 30 min
+        }
+        expireTime := time.Now().Add(time.Minute * time.Duration(timeOut)).Unix()
+        if err = h.db.Put(common.BoltDBJWTTable,
+                key,
+                []byte(strconv.FormatInt(expireTime, 10))); err != nil {
+                response.ResErr(c, http.StatusInternalServerError, err)
+                return
+        }
+
+        // send response
+        resp := Token{
+                Token:    token,
+                UserName: username,
+        }
+        response.ResOKGinJson(c, &TokenResp{
+                resp,
+        })
 }

@@ -19,22 +19,22 @@ func NewJWT() *JWT {
 	}
 }
 
-// AIPClaims ...
-type AIPClaims struct {
+// AClaims ...
+type AClaims struct {
 	Name  string `json:"name"`
 	jwt.StandardClaims
 }
 
 
 // GenerateToken generates the token and use jwt.SigningMethodHS256
-func (j *JWT) GenerateToken(claims AIPClaims) (string, error) {
+func (j *JWT) GenerateToken(claims AClaims) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString(j.SigningKey)
 }
 
 // ParseToken parses the jwt token
-func (j *JWT) ParseToken(tokenString string) (*AIPClaims, error) {
-	token, err := jwt.ParseWithClaims(tokenString, &AIPClaims{}, func(token *jwt.Token) (interface{}, error) {
+func (j *JWT) ParseToken(tokenString string) (*AClaims, error) {
+	token, err := jwt.ParseWithClaims(tokenString, &AClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return j.SigningKey, nil
 	})
 
@@ -53,7 +53,7 @@ func (j *JWT) ParseToken(tokenString string) (*AIPClaims, error) {
 		}
 	}
 
-	if claims, ok := token.Claims.(*AIPClaims); ok && token.Valid {
+	if claims, ok := token.Claims.(*AClaims); ok && token.Valid {
 		return claims, nil
 	}
 

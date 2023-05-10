@@ -147,6 +147,10 @@ func registerAPI(g *gin.Engine, conf *config.Config, log logger.AipLogger, handl
 	// Auth login
 	root.POST("/login", handler.AuthHandlers.LoginUser)
 
+        // Token renew
+        tokenR := root.Group("/token")
+        tokenR.GET("/renew", handler.AuthHandlers.TokenRenew)
+
 	// Cmd
 	cmdR := root.Group("/cmd")
 	cmdR.POST("/run", handler.CmdHandlers.RunCommand)
