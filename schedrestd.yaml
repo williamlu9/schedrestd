@@ -6,8 +6,8 @@
 # log_level: info
 
 #------------------------------------------------------------------------
-# Token timeout value. Integer. Unit is minute. Default value is 30 min
-# timeout: 30
+# Token timeout value. Integer. Unit is minute. Default value is 10 years
+# timeout: 5256000
 
 #------------------------------------------------------------------------
 # Define the web url prefix path for Restful API

@@ -1,0 +1,33 @@
+#!/bin/bash
+
+inst_path=$(dir $0)
+
+# install restd
+systemctl stop schedrestd
+cp $inst_path/schedrestd /usr/sbin
+
+cat <<EOF > /lib/systemd/system/schedrestd.service
+[Unit]
+Description=HPC Scheduler REST service
+After=network.target remote-fs.target
+
+[Service]
+Type=simple
+ExecStart=/usr/sbin/schedrestd
+ExecReload=/usr/bin/kill -HUP $MAINPID
+KillMode=process
+Restart=always
+RestartSec=15
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+mkdir -p /etc/schedrestd
+if [ ! -f /etc/schedrestd/schedrestd.yaml ]; then
+    cp $inst_path/schedrestd.yaml /etc/schedrestd/
+fi
+
+systemctl daemon-reload
+systemctl enable schedrestd
+systemctl restart schedrestd

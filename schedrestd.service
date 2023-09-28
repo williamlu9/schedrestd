@@ -7,6 +7,8 @@ Type=simple
 ExecStart=/usr/sbin/schedrestd
 ExecReload=/usr/bin/kill -HUP $MAINPID
 KillMode=process
+Restart=always
+RestartSec=15
 
 [Install]
 WantedBy=multi-user.target
