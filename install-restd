@@ -1,6 +1,6 @@
 #!/bin/bash
 
-inst_path=$(dir $0)
+inst_path=$(dirname $0)
 
 # install restd
 systemctl stop schedrestd
