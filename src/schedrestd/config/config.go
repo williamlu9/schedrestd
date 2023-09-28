@@ -49,7 +49,7 @@ func NewConfig() *Config {
 	}
 
 	conf.LogDir = GetLogDir()
-	conf.WorkDir = "/var/tmp"
+	conf.WorkDir = "/var/run"
 
 	if conf.WebUrlPath == "" {
 		conf.WebUrlPath = "/"
