@@ -4,7 +4,7 @@ BUILDTIME=`date`
 RESTD_VERSION=0.1
 RESTD_COPYRIGHT=2023
 
-PROJECTS=schedrestd
+PROJECTS=schedrestd tokengen
 
 sbin_SCRIPTS = schedrestd
 
@@ -22,6 +22,7 @@ distclean: clean
 
 install: schedrestd
 	install schedrestd /usr/sbin/schedrestd
+	isntall tokengen /usr/bin/tokengen
 	install schedrestd.service /lib/systemd/system
 	if [ ! -d /etc/schedrestd ];then mkdir /etc/schedrestd;fi
 	install schedrestd.yaml /etc/schedrestd/schedrestd.yaml

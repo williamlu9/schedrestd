@@ -33,7 +33,7 @@ func main() {
     timeOutStr := ""
     if userName == "root" {
         if len(os.Args) < 2 {
-            fmt.Println("Usage: " + os.Args[0] + " username")
+            fmt.Println("Usage: " + os.Args[0] + " username [duration_minutes]")
             os.Exit(0)
         }
         userName = os.Args[1]
@@ -53,7 +53,7 @@ func main() {
     } else {
         timeOut, err = strconv.ParseInt(conf.Timeout, 10, 64)
         if err != nil {
-            timeOut = 30
+            timeOut = 5256000 // 10 years
         }
     }
 

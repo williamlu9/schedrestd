@@ -5,6 +5,7 @@ inst_path=$(dirname $0)
 # install restd
 systemctl stop schedrestd
 cp $inst_path/schedrestd /usr/sbin
+cp $inst_path/tokengen /usr/bin
 
 cat <<EOF > /lib/systemd/system/schedrestd.service
 [Unit]
