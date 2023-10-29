@@ -124,7 +124,7 @@ func (h *Handler) LoginUser(c *gin.Context) {
 	key := fmt.Sprintf("%v-%v", token, req.UserName)
 	timeOut, err := strconv.ParseInt(h.conf.Timeout, 10, 64)
 	if err != nil {
-		timeOut = 5256000 // Default value is 10 years
+		timeOut = 30 // Default value is 30 minutes
 	}
 	expireTime := time.Now().Add(time.Minute * time.Duration(timeOut)).Unix()
 	if err = h.db.Put(common.BoltDBJWTTable,
