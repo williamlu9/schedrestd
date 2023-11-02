@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"syscall"
 	"strings"
+	"bytes"
 )
 
 const (
@@ -43,6 +44,7 @@ func NewCmdHandler() *Handler {
 func (h *Handler) RunCommand(c *gin.Context) {
 	var cmdReq CmdRun
 	var res RunCommandResponse
+	var stdout, stderr bytes.Buffer
 	if err := c.BindJSON(&cmdReq); err != nil {
 		response.ResErr(c, http.StatusBadRequest, err)
 		return
@@ -76,12 +78,11 @@ func (h *Handler) RunCommand(c *gin.Context) {
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
 	cmd.SysProcAttr.Credential =
 		&syscall.Credential{Uid: uint32(uid), Gid: uint32(gid)}
-	output, err := cmd.CombinedOutput()
-	if err != nil {
-		response.ResErr(c, http.StatusBadRequest, err)
-		return
-	}
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	cmd.Run()
 	
-	res.Output = string(output)
+	res.Output = string(stdout.Bytes())
+	res.Error  = string(stderr.Bytes())
 	response.ResOKGinJson(c, res) 
 }

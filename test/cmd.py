@@ -16,7 +16,11 @@ except Exception as error:
     print('ERROR', error)
     sys.exit(1)
 
-reply = requests.post(baseurl + 'login', json = {'username': username, 'password':password})
+try:
+    reply = requests.post(baseurl + 'login', json = {'username': username, 'password':password})
+except Exception as error:
+    print('ERROR', error)
+    sys.exit(1)
 
 res = json.loads(reply.text)
 
@@ -42,4 +46,4 @@ if res['data'] == None:
     print(res['msg'],"")
     sys.exit(1)
 
-print(res['data']['Output'], end='')
+print(res['data']['Output'] + res['data']['Error'], end='')

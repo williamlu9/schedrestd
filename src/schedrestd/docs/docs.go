@@ -168,7 +168,7 @@ const docTemplate = `{
                     "200": {
                         "description": "Success",
                         "schema": {
-                            "$ref": "#/definitions/cmd.CmdRunResp"
+                            "$ref": "#/definitions/cmd.CmdRunResponse"
                         }
                     },
                     "400": {
@@ -337,7 +337,10 @@ const docTemplate = `{
             "properties": {
                 "output": {
                     "type": "string"
-                }
+                },
+		"error": {
+		    "type": "string"
+		}
             }
         },
          "response.Response": {
