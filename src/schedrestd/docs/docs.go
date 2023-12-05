@@ -343,7 +343,23 @@ const docTemplate = `{
 		}
             }
         },
-         "response.Response": {
+        "file.FileResp": {
+            "type": "object",
+            "properties": {
+                "file": {
+                    "$ref": "#/definitions/file.FileResponse"
+                }
+            }
+        },
+        "file.FileResponse": {
+            "type": "object",
+            "properties": {
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
+        "response.Response": {
             "type": "object",
             "properties": {
                 "data": {},
