@@ -218,7 +218,7 @@ const docTemplate = `{
                         "name": "Authorization",
                         "in": "header",
                         "required": true
-                    },
+                    }
                 ],
                 "responses": {
                     "200": {
