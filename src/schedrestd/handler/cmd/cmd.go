@@ -63,7 +63,7 @@ func (h *Handler) RunCommand(c *gin.Context) {
 		cmdStr = cmdStr + strings.Join(cmdReq.Envs[:], " ") + " "
 	}
 	cmdStr = cmdStr + cmdReq.Command
-	cmd := exec.Command("sh", "-c", cmdStr)
+	cmd := exec.Command("sh", "-l", "-c", cmdStr)
 
 	// submit job as authenticated user
 	val,_ := c.Get(common.UserHeader)

@@ -92,7 +92,8 @@ func NewAuthHandler(jwt *jwt.JWT, db *kvdb.KVStore, conf *config.Config) *Handle
 // @Router /login [post] {}
 func (h *Handler) LoginUser(c *gin.Context) {
 	var req AuthReq
-	if err := c.BindJSON(&req); err != nil {
+	var err error
+	if err = c.BindJSON(&req); err != nil {
 		response.ResErr(c, http.StatusBadRequest, err)
 		return
 	}
@@ -106,6 +107,13 @@ func (h *Handler) LoginUser(c *gin.Context) {
 		return
 	}
 
+	timeOut := int64(req.Duration)
+	if timeOut == 0 {
+		timeOut, err = strconv.ParseInt(h.conf.Timeout, 10, 64)
+                if err != nil {
+			timeOut = 30 // Default value is 30 minutes
+		}
+	}
 	// generate token
 	claims := jwt.AClaims{
 		req.UserName,
@@ -122,10 +130,6 @@ func (h *Handler) LoginUser(c *gin.Context) {
 
 	// store token in db
 	key := fmt.Sprintf("%v-%v", token, req.UserName)
-	timeOut, err := strconv.ParseInt(h.conf.Timeout, 10, 64)
-	if err != nil {
-		timeOut = 30 // Default value is 30 minutes
-	}
 	expireTime := time.Now().Add(time.Minute * time.Duration(timeOut)).Unix()
 	if err = h.db.Put(common.BoltDBJWTTable,
 		key,

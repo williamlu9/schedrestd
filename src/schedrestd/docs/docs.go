@@ -285,7 +285,11 @@ const docTemplate = `{
                 "username": {
                     "description": "User name",
                     "type": "string"
-                }
+                },
+		"duration": {
+		    "description": "Token valid duration in minute",
+		    "type:": "integer"
+		}
             }
         },
         "auth.Token": {

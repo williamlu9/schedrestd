@@ -29,4 +29,7 @@ type AuthReq struct {
 
 	// Password
 	Password string `json:"password" binding:"required"`
+
+	// Token duration
+	Duration int    `json:"duration,omitempty"`
 }
