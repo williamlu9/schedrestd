@@ -95,9 +95,12 @@ command = ' '.join(sys.argv[2:])
 
 headers = {'Authorization': 'Bearer ' + token}
 
-# specify command and cwd: the current working directory for the command to run.
+# specify command, current working directory for the command to run (optional),
+# and environment variables (optional):
 inputvar = {'command':command,
-            'cwd':'/var/tmp'
+            'cwd':'/var/tmp',
+            'envs':['aaa=aaa',
+                    'bbb=bbb']
            }
 
 reply = requests.post(baseurl + 'cmd/run', json = inputvar, headers=headers)

@@ -8,8 +8,6 @@ import (
 	"net/http"
 	"os/exec"
 	"os/user"
-	"strconv"
-	"syscall"
 	"strings"
 	"bytes"
 )
@@ -63,21 +61,22 @@ func (h *Handler) RunCommand(c *gin.Context) {
 		cmdStr = cmdStr + strings.Join(cmdReq.Envs[:], " ") + " "
 	}
 	cmdStr = cmdStr + cmdReq.Command
-	cmd := exec.Command("sh", "-l", "-c", cmdStr)
 
 	// submit job as authenticated user
 	val,_ := c.Get(common.UserHeader)
 	username := val.(string)
-	user, err := user.Lookup(username)
+	_, err := user.Lookup(username)
 	if err != nil {
 		response.ResErr(c, http.StatusInternalServerError, err)
 		return
 	}
-	uid, _ := strconv.Atoi(user.Uid)
-	gid, _ := strconv.Atoi(user.Gid)
-	cmd.SysProcAttr = &syscall.SysProcAttr{}
-	cmd.SysProcAttr.Credential =
-		&syscall.Credential{Uid: uint32(uid), Gid: uint32(gid)}
+	// Old code, missing user additional groups
+	// uid, _ := strconv.Atoi(user.Uid)
+	// gid, _ := strconv.Atoi(user.Gid)
+	// cmd.SysProcAttr = &syscall.SysProcAttr{}
+	// cmd.SysProcAttr.Credential =
+	//	&syscall.Credential{Uid: uint32(uid), Gid: uint32(gid)}
+	cmd := exec.Command("su", "-", username, "-c", cmdStr)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	cmd.Run()
