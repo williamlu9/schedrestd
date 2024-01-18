@@ -32,3 +32,11 @@
 #------------------------------------------------------------------------
 # Https key file path. If enable https, need to generate it
 # key: /opt/cert/server.key
+
+#------------------------------------------------------------------------
+# Working directory. The directory is used to store database
+# workdir: /var/run
+
+#------------------------------------------------------------------------
+# Logging directory. The directory is used to store schedrestd.log
+# logdir: /var/log

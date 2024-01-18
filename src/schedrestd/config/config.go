@@ -19,8 +19,8 @@ type Config struct {
 	HttpsPort  string `yaml:"https_port"`
 	Cert       string `yaml:"cert"`
 	Key        string `yaml:"key"`
-	LogDir     string
-	WorkDir    string
+	LogDir     string `yaml:"logdir"`
+	WorkDir    string `yaml:"workdir"`
 }
 
 // NewConfig ...
@@ -48,8 +48,12 @@ func NewConfig() *Config {
 		return &Config{}
 	}
 
-	conf.LogDir = GetLogDir()
-	conf.WorkDir = "/var/run"
+	if conf.LogDir == "" {
+		conf.LogDir = GetLogDir()
+	}
+	if conf.WorkDir == "" {
+		conf.WorkDir = "/var/run"
+	}
 
 	if conf.WebUrlPath == "" {
 		conf.WebUrlPath = "/"

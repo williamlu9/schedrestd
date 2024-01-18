@@ -76,7 +76,7 @@ func (h *Handler) RunCommand(c *gin.Context) {
 	// cmd.SysProcAttr = &syscall.SysProcAttr{}
 	// cmd.SysProcAttr.Credential =
 	//	&syscall.Credential{Uid: uint32(uid), Gid: uint32(gid)}
-	cmd := exec.Command("su", "-", username, "-c", cmdStr)
+	cmd := exec.Command("su", "-s", "/bin/bash", "-", username, "-c", cmdStr)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
 	cmd.Run()
