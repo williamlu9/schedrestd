@@ -7,7 +7,7 @@
 
 #------------------------------------------------------------------------
 # Token timeout value. Integer. Unit is minute. Default value is 30 minutes
-# timeout: 30
+timeout: 5256000
 
 #------------------------------------------------------------------------
 # Define the web url prefix path for Restful API

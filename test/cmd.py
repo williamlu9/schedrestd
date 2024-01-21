@@ -21,7 +21,7 @@ reply = requests.post(baseurl + 'cmd/run', json = inputvar, headers=headers)
 
 res = json.loads(reply.text)
 
-if res['data'] == None:
+if not 'data' in res:
     print(res['msg'],"")
     sys.exit(1)
 
