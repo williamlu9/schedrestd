@@ -23,7 +23,7 @@ except Exception as error:
 # call API to generate a token that is valid for 120 minutes
 reply = requests.post(baseurl + 'login', json = {'username':username, 'password':password, 'duration': duration})
 res = json.loads(reply.text)
-if not 'data' in res:
+if (not 'data' in res) or (res['data'] == None):
     print(res["msg"],"")
     sys.exit(1)
 
