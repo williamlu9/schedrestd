@@ -22,7 +22,7 @@ const docTemplate = `{
     "paths": {
         "/file/download/{file_name}": {
             "get": {
-                "description": "Example upload request:\ncurl -X GET -H \"Authorization: Bearer $TOKEN\" \"http://localhost:8088/sa/v1/file/download/testfile\" \u003e ./testfile",
+                "description": "Example download request:\ncurl -X GET -H \"Authorization: Bearer $TOKEN\" \"http://localhost:8088/sa/v1/file/download/testfile?dir=/data\" \u003e ./testfile",
                 "produces": [
                     "application/octet-stream"
                 ],
@@ -41,10 +41,16 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "file_name",
+                        "description": "Filename to download",
                         "name": "file_name",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Source Directory",
+                        "name": "dir",
+                        "in": "query"
                     }
                 ],
                 "responses": {
@@ -77,7 +83,7 @@ const docTemplate = `{
         },
         "/file/upload": {
             "post": {
-                "description": "Example upload request:\ncurl -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: multipart/form-data\" -F \"file=@/shared/testfile\" \"http://localhost:8088/sa/v1/file/upload\"",
+                "description": "Example upload request:\ncurl -H \"Authorization: Bearer $TOKEN\" -H \"Content-Type: multipart/form-data\" -F \"file=@/shared/testfile\" \"http://localhost:8088/sa/v1/file/upload?dir=/data\"",
                 "consumes": [
                     "multipart/form-data"
                 ],
@@ -87,7 +93,7 @@ const docTemplate = `{
                 "tags": [
                     "file"
                 ],
-                "summary": "Upload a file to user home directory",
+                "summary": "Upload a file to a specific directory or user home directory",
                 "parameters": [
                     {
                         "type": "string",
@@ -99,10 +105,16 @@ const docTemplate = `{
                     },
                     {
                         "type": "file",
-                        "description": "upload file",
+                        "description": "Filename to Upload",
                         "name": "file",
                         "in": "formData",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Destination Directory",
+                        "name": "dir",
+                        "in": "query"
                     }
                 ],
                 "responses": {

@@ -61,11 +61,33 @@ func (h *Handler) UploadFile(c *gin.Context) {
 		response.ResErr(c, http.StatusInternalServerError, err)
 		return		
 	}
-	if len(user.HomeDir) == 0 {
-		response.ResErr(c, http.StatusInternalServerError, errors.New("User homedir not found"))
-		return			
+
+	uid, _ := strconv.Atoi(user.Uid)
+        gid, _ := strconv.Atoi(user.Gid)
+	workdir := c.Query("dir")
+	if len(workdir) == 0 {
+		// destination is user's home
+		if len(user.HomeDir) == 0 {
+			response.ResErr(c, http.StatusInternalServerError, errors.New("User homedir not found"))
+			return
+		}
+		workdir = user.HomeDir
+	} else {
+		if _, err := os.Stat(workdir); errors.Is(err, os.ErrNotExist) {
+			err := os.MkdirAll(workdir, 0755)
+			if err != nil {
+				response.ResErr(c, http.StatusInternalServerError, err)
+                                return
+                        }
+                        err = os.Chown(workdir, uid, gid)
+                        if err != nil {
+                                response.ResErr(c, http.StatusInternalServerError, err)
+                                return
+                        }
+                }
 	}
-	dst := path.Join(user.HomeDir, file.Filename)
+
+	dst := path.Join(workdir, file.Filename)
 	logger.GetDefault().Infof("upload file to: %v", dst)
 	
 	// save file
@@ -75,8 +97,6 @@ func (h *Handler) UploadFile(c *gin.Context) {
 	}
 	
 	// change file owner
-	uid, _ := strconv.Atoi(user.Uid)
-	gid, _ := strconv.Atoi(user.Gid)		
 	if err := os.Chown(dst, uid, gid); err != nil {
 		response.ResErr(c, http.StatusInternalServerError, err)
 		return			
@@ -116,11 +136,16 @@ func (h *Handler) DownloadFile(c *gin.Context) {
 		response.ResErr(c, http.StatusInternalServerError, err)
 		return		
 	}
-	if len(user.HomeDir) == 0 {
-		response.ResErr(c, http.StatusInternalServerError, errors.New("User homedir not found"))
-		return			
+
+        workdir := c.Query("dir")
+        if len(workdir) == 0 {
+		if len(user.HomeDir) == 0 {
+			response.ResErr(c, http.StatusInternalServerError, errors.New("User homedir not found"))
+			return
+		}
+		workdir = user.HomeDir
 	}
-	srcPath := path.Join(user.HomeDir, filename)
+	srcPath := path.Join(workdir, filename)
 	logger.GetDefault().Infof("download file: %v", srcPath)
 
     //c.File(srcPath)
