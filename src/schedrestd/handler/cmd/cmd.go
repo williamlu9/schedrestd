@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"os/exec"
 	"os/user"
-	"strings"
 	"bytes"
 )
 
@@ -58,7 +57,9 @@ func (h *Handler) RunCommand(c *gin.Context) {
 		cmdStr = cmdStr + "cd " + cmdReq.Cwd + ";"
 	}
 	if len(cmdReq.Envs) > 0 {
-		cmdStr = cmdStr + strings.Join(cmdReq.Envs[:], " ") + " "
+		for _, env := range cmdReq.Envs {
+			cmdStr = cmdStr + "export " + env + ";"
+		}
 	}
 	cmdStr = cmdStr + cmdReq.Command
 
@@ -70,12 +71,6 @@ func (h *Handler) RunCommand(c *gin.Context) {
 		response.ResErr(c, http.StatusInternalServerError, err)
 		return
 	}
-	// Old code, missing user additional groups
-	// uid, _ := strconv.Atoi(user.Uid)
-	// gid, _ := strconv.Atoi(user.Gid)
-	// cmd.SysProcAttr = &syscall.SysProcAttr{}
-	// cmd.SysProcAttr.Credential =
-	//	&syscall.Credential{Uid: uint32(uid), Gid: uint32(gid)}
 	cmd := exec.Command("su", "-s", "/bin/bash", "-", username, "-c", cmdStr)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
