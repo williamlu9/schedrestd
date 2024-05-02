@@ -6,14 +6,19 @@ Provide RESTFUL interface to run HPC scheduler commands
 
 It requires golang and make.
 
-Run "make" to build the binary schedrestd.
+Run the follow commands.
+```
+make
+./package-restd
+```
+This creates a release file schedrestd.tar.gz
 
 ### Deploy ###
 
+Extract and install
 ```
-make install
-systemctl enable schedrestd
-systemctl start schedrestd
+tar xfz schedrestd.tar.gz
+./install-restd
 ```
 
 This will install schedrestd to /usr/sbin, schedrestd.yaml to /etc/schedrestd,
@@ -28,7 +33,7 @@ http://IP_ADDR:8088/sa/v1/swagger/index.html
 
 By default, the servide listens to the port of 8088 on HTTP. The file /etc/scheddrestd/schedrestd.yaml allows changing some configurations like adding SSL certificates, changing port, and etc. Refer to the file comment area for the description of each parameter.
 
-After modifying the configuration file, restart the service is required.
+After modifying the configuration file /ets/schedrestd/schedrestd.yaml, restart the service is required.
 
 ```
 systemctl restart schedrestd

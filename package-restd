@@ -1,2 +1,3 @@
 #!/bin/bash
-tar cfz schedrestd.tar.gz install-restd schedrestd schedrestd.yaml tokengen test
+tar cfz schedrestd.tar.gz install-restd schedrestd schedrestd.yaml tokengen \
+test README.md LICENSE
