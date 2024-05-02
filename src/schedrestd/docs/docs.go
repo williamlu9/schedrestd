@@ -351,11 +351,14 @@ const docTemplate = `{
         "cmd.CmdRunResponse": {
             "type": "object",
             "properties": {
-                "output": {
+                "Output": {
                     "type": "string"
                 },
-		"error": {
+		"Error": {
 		    "type": "string"
+		},
+		"ExitCode": {
+		    "type": "integer"
 		}
             }
         },

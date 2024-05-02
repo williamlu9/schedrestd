@@ -26,3 +26,4 @@ if (not 'data' in res) or (res['data'] == None):
     sys.exit(1)
 
 print(res['data']['Output'] + res['data']['Error'], end='')
+sys.exit(res['data']['ExitCode'])

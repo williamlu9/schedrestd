@@ -14,4 +14,5 @@ type CmdRun struct {
 type RunCommandResponse struct {
 	Output string
 	Error  string
+	ExitCode int
 }

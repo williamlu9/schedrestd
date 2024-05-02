@@ -74,9 +74,15 @@ func (h *Handler) RunCommand(c *gin.Context) {
 	cmd := exec.Command("su", "-s", "/bin/bash", "-", username, "-c", cmdStr)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
-	cmd.Run()
+	err = cmd.Run()
 	
 	res.Output = string(stdout.Bytes())
 	res.Error  = string(stderr.Bytes())
+	res.ExitCode = 0
+	if err != nil {
+		if exitError, ok := err.(*exec.ExitError); ok {
+			res.ExitCode = exitError.ExitCode()
+		}
+	}
 	response.ResOKGinJson(c, res) 
 }
