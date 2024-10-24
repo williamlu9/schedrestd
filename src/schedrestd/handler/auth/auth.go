@@ -15,7 +15,7 @@ package auth
 #include <security/pam_appl.h>
 #include <stdlib.h>
 
-static struct pam_response *reply;
+static struct pam_response *reply = NULL;
 
 int
 null_conv(int num_msg, const struct pam_message **msg,
