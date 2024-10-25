@@ -4,7 +4,7 @@ After=network.target remote-fs.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/bash -c "/usr/sbin/schedrestd > /var/log/schedrestd.log 2>&1"
+ExecStart=/usr/sbin/schedrestd
 ExecReload=/usr/bin/kill -HUP $MAINPID
 KillMode=process
 Restart=always

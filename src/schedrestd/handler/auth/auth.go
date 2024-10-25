@@ -99,8 +99,10 @@ func (h *Handler) LoginUser(c *gin.Context) {
 	}
 
 	username := C.CString(req.UserName)
-	cAuth := C.authenticate(username, C.CString(req.Password))
+	password := C.CString(req.Password)
+	cAuth := C.authenticate(username, password)
 	defer C.free(unsafe.Pointer(username))
+	defer C.free(unsafe.Pointer(password))
 	if int(cAuth) == 0 {
 		logger.GetDefault().Errorf("Authentication failed for user: " + req.UserName)
 		response.ResErr(c, http.StatusBadRequest, errors.New(AUTHERROR))
