@@ -14,6 +14,7 @@ package auth
 #cgo LDFLAGS: -lpam
 #include <security/pam_appl.h>
 #include <stdlib.h>
+#include <string.h>
 
 static struct pam_response *reply = NULL;
 
@@ -38,7 +39,7 @@ authenticate(char *user, char *password)
     if ((retval = pam_start("system-auth", user, &conv, &pamh)) != PAM_SUCCESS)
         return 0;
     reply = calloc(1, sizeof(struct pam_response));
-    reply->resp = password;
+    reply->resp = strdup(password);
     retval = pam_authenticate(pamh, 0);
     pam_end(pamh, PAM_SUCCESS);
     return (retval == PAM_SUCCESS ? 1 : 0);
