@@ -61,6 +61,9 @@ import (
 	"time"
 	"errors"
 	"unsafe"
+	"os"
+	"os/exec"
+	"path/filepath"
 )
 
 const (
@@ -83,6 +86,26 @@ func NewAuthHandler(jwt *jwt.JWT, db *kvdb.KVStore, conf *config.Config) *Handle
 	}
 }
 
+// Check sched_auth exists
+func get_sched_auth_path() string {
+	ex, err := os.Executable()
+        if err != nil {
+                return ""
+        }
+
+        // Get the directory path of the executable
+        dir := filepath.Dir(ex)
+
+        // Construct the path to the sched_auth executable
+        schedAuthPath := filepath.Join(dir, "sched_auth")
+
+        // Check if the sched_auth executable exists
+        if _, err := os.Stat(schedAuthPath); os.IsNotExist(err) {
+                return ""
+        }
+	return schedAuthPath
+}
+
 // @login
 // @Description Logs user into the system
 // @Tags    auth
@@ -98,12 +121,34 @@ func (h *Handler) LoginUser(c *gin.Context) {
 		return
 	}
 
-	username := C.CString(req.UserName)
-	password := C.CString(req.Password)
-	cAuth := C.authenticate(username, password)
-	defer C.free(unsafe.Pointer(username))
-	defer C.free(unsafe.Pointer(password))
-	if int(cAuth) == 0 {
+	// check if "sched_auth" exists, if so use it.
+	schedAuthPath := get_sched_auth_path()
+	authSuccess := 0
+	if schedAuthPath == "" {
+		username := C.CString(req.UserName)
+		password := C.CString(req.Password)
+		cAuth := C.authenticate(username, password)
+		defer C.free(unsafe.Pointer(username))
+		defer C.free(unsafe.Pointer(password))
+		authSuccess = int(cAuth)
+	} else {
+		logger.GetDefault().Infof("Authenticating user <" + req.UserName + "> by using sched_auth")
+		os.Setenv("SCHED_USER", req.UserName)
+		os.Setenv("SCHED_PASS", req.Password)
+		cmd := exec.Command(schedAuthPath)
+		err = cmd.Run()
+		if err != nil {
+			authSuccess = 0
+		} else {
+			if _, ok := err.(*exec.ExitError); ok {
+				authSuccess = 0
+			} else {
+				authSuccess = 1
+			}
+		}
+	}
+
+	if authSuccess == 0 {
 		logger.GetDefault().Errorf("Authentication failed for user: " + req.UserName)
 		response.ResErr(c, http.StatusBadRequest, errors.New(AUTHERROR))
 		return
