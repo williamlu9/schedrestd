@@ -1,3 +1,4 @@
 #!/bin/bash
-tar cfz schedrestd.tar.gz install-restd schedrestd schedrestd.yaml tokengen \
+tar cfz schedrestd-$(date +"%Y%m").tar.gz \
+install-restd schedrestd schedrestd.yaml tokengen \
 sched_auth test README.md LICENSE
