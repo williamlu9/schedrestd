@@ -3,7 +3,9 @@
 inst_path=$(dirname $0)
 
 # install restd
-mv /usr/sbin/schedrestd /usr/sbin/schedrestd.orig
+if [ -f /usr/sbin/schedrestd ]; then
+    mv /usr/sbin/schedrestd /usr/sbin/schedrestd.orig
+fi
 cp $inst_path/schedrestd /usr/sbin
 cp $inst_path/sched_auth /usr/sbin
 cp $inst_path/tokengen /usr/bin
