@@ -118,3 +118,25 @@ if res['data'] == None:
 
 print(res['data']['Output'] + res['data']['Error'], end='')
 ```
+### Troubleshooting ###
+1. Logs
+
+The schedrestd log file is typically in /var/log/schedrestd.log.*hostname*. The service also has stdout and stderr. When the service runs into problem, it throws out messages on stderr.
+
+The best way to view stdout and stderr is to use command:
+```
+journalctl -u schedrestd -e
+```
+for the lastest or:
+```
+journalctl -u schedrestd
+```
+for a long period.
+
+2. Restarting
+
+Sometime the REST API server could run into problems. In which case, restarting it could solve the problem. The access tokens are persistent in a SQLite database under the schedrestd working directory (configured in /etc/schedrestd/schedrestd.yaml).
+```
+systemctl restart schedrestd
+```
+You may also create a cronjob to restart it periodically for keeping the service healthy.
