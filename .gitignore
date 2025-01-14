@@ -1,3 +1,6 @@
 schedrestd
+sched_auth
+schedrestd*.tar.gz
 tokengen
-schedrestd.tar.gz
+go.mod
+go.sum
