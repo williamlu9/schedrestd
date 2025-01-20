@@ -26,7 +26,14 @@ authenticate(char *user, char *password)
         return 0;
     reply = calloc(1, sizeof(struct pam_response));
     reply->resp = strdup(password);
-    retval = pam_authenticate(pamh, 0);
+    if ((retval = pam_authenticate(pamh, 0)) != PAM_SUCCESS)
+       goto auth_end;
+    if ((retval = pam_acct_mgmt(pamh, 0)) != PAM_SUCCESS)
+       goto auth_end;
+    if ((retval = pam_open_session(pamh, 0)) != PAM_SUCCESS)
+       goto auth_end;
+    pam_close_session(pamh, 0);
+  auth_end:
     pam_end(pamh, PAM_SUCCESS);
     return (retval == PAM_SUCCESS ? 0 : 1);
 }
