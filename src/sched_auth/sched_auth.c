@@ -30,6 +30,8 @@ authenticate(char *user, char *password)
        goto auth_end;
     if ((retval = pam_acct_mgmt(pamh, 0)) != PAM_SUCCESS)
        goto auth_end;
+    reply = calloc(1, sizeof(struct pam_response));
+    reply->resp = strdup(password);
     if ((retval = pam_open_session(pamh, 0)) != PAM_SUCCESS)
        goto auth_end;
     pam_close_session(pamh, 0);
